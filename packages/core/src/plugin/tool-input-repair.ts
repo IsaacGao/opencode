@@ -2,7 +2,6 @@ export * as ToolInputRepairPlugin from "./tool-input-repair.js"
 
 import { define } from "@opencode/plugin/effect/plugin"
 import type { ToolEditor } from "@opencode/plugin/effect/tool"
-import { CodeMode } from "@opencode/codemode"
 import { Effect, JsonSchema, Option, Predicate, Schema } from "effect"
 import { definition } from "../tool/runtime.js"
 
@@ -19,7 +18,6 @@ import { definition } from "../tool/runtime.js"
 
 const decodeJson = Schema.decodeUnknownOption(Schema.fromJsonString(Schema.Unknown))
 const maxDepth = 6
-const executeSchema = Schema.toJsonSchemaDocument(CodeMode.Input).schema
 
 export const Plugin = define({
   id: "opencode.tool.input.repair",
@@ -31,10 +29,13 @@ export const Plugin = define({
     })
     yield* ctx.tool.hook("execute.before", (event) =>
       Effect.sync(() => {
+        // The outer Code Mode tool is built per snapshot rather than registered, so it cannot be
+        // looked up here. Its `{ code }` input is trivial; the tools it calls are repaired normally.
+        if (event.tool === "execute") return
         const tool = get(event.tool)
-        // The outer Code Mode tool is synthesized by snapshots, not registered in the draft.
-        const schema = tool ? definition(tool).inputSchema : event.tool === "execute" ? executeSchema : undefined
-        if (schema?.type !== "object") return
+        if (!tool) return
+        const schema = definition(tool).inputSchema
+        if (schema.type !== "object") return
         event.input = repair(event.input, schema, schema, 0)
       }),
     )

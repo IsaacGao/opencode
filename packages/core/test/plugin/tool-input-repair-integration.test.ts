@@ -83,7 +83,7 @@ it.effect("repairs tool input before validating its original schema", () =>
   }),
 )
 
-it.effect("repairs outer Code Mode input and looks up namespaced inner tool schemas", () =>
+it.effect("repairs namespaced inner tool input called from Code Mode", () =>
   Effect.gen(function* () {
     const plugins = yield* Plugin.Service
     const registry = yield* Tool.Service
@@ -106,7 +106,7 @@ it.effect("repairs outer Code Mode input and looks up namespaced inner tool sche
         type: "tool-call",
         id: "call-codemode-repair",
         name: "execute",
-        input: JSON.stringify({ code: 'return await tools.example.count({ count: "3" })' }),
+        input: { code: 'return await tools.example.count({ count: "3" })' },
       },
     })
     expect(executed).toEqual([{ count: 3 }])
