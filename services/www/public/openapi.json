@@ -13403,7 +13403,14 @@
         "allOf": [
           {
             "type": "object",
-            "additionalProperties": {}
+            "additionalProperties": {
+              "anyOf": [
+                {},
+                {
+                  "type": "null"
+                }
+              ]
+            }
           }
         ]
       },

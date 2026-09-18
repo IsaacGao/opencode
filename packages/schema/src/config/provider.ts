@@ -14,7 +14,7 @@ export const Settings = Schema.StructWithRest(
     compaction: Provider.Compaction.pipe(optional),
     transport: Provider.Transport.pipe(optional),
   }),
-  [Schema.Record(Schema.String, Schema.Json)],
+  [Schema.Record(Schema.String, Schema.UndefinedOr(Schema.Json))],
 ).annotate({ identifier: "Config.Provider.Settings" })
 export type Settings = typeof Settings.Type
 

@@ -470,7 +470,7 @@ export type ConfigProviderSettings = {
   chunkTimeout?: number
   compaction?: ProviderCompaction
   transport?: ProviderTransport
-} & { [x: string]: JsonValue }
+} & { [x: string]: JsonValue | null }
 
 export type PermissionRule = { action: string; resource: string; effect: PermissionEffect }
 
