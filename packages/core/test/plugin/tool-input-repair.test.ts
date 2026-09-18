@@ -219,6 +219,33 @@ describe("tool input repair plugin", () => {
     }),
   )
 
+  it.effect("preserves nulls whose validity is hidden inside compositions", () =>
+    Effect.gen(function* () {
+      const input = { wrapped: null, enumerated: null, permissive: null, constant: null }
+      const event = yield* run(
+        input,
+        object({
+          wrapped: { anyOf: [{ type: ["string", "null"] }] },
+          enumerated: { anyOf: [{ enum: [null, "keep"] }] },
+          permissive: { anyOf: [{}] },
+          constant: { type: "string", const: "keep" },
+        }),
+      )
+      expect(event.input).toBe(input)
+    }),
+  )
+
+  it.effect("preserves optional-looking nulls when the parent composes requirements", () =>
+    Effect.gen(function* () {
+      const input = { value: null }
+      const event = yield* run(input, {
+        ...object({ value: { type: "string" } }),
+        allOf: [{ required: ["value"] }],
+      })
+      expect(event.input).toBe(input)
+    }),
+  )
+
   it.effect("coerces numeric and boolean strings while preserving invalid and existing values", () =>
     Effect.gen(function* () {
       const input = {

@@ -118,33 +118,18 @@ function repairObject(
     }
     if (!Predicate.isObject(property)) return result
 
-    if (declared && !required.includes(key)) {
-      const branches = Array.isArray(property.anyOf)
-        ? property.anyOf
-        : Array.isArray(property.oneOf)
-          ? property.oneOf
-          : []
-      const nullable =
-        property.nullable === true ||
-        property.type === "null" ||
-        (Array.isArray(property.type) && property.type.includes("null")) ||
-        branches.some(
-          (branch) =>
-            branch === true ||
-            (Predicate.isObject(branch) &&
-              (branch.type === "null" || branch.const === null || typeof branch.$ref === "string")),
-        )
-      const placeholder =
-        Predicate.isObject(current) &&
-        Object.keys(current).length === 0 &&
-        typeof property.type === "string" &&
-        property.type !== "object" &&
-        branches.length === 0
-      if ((current === null && !nullable && (property.type !== undefined || branches.length > 0)) || placeholder) {
-        const next = { ...result }
-        delete next[key]
-        return next
-      }
+    // Only a bare single-type property provably rejects null and `{}`. Compositions, enums,
+    // constants, references and nullable flags may accept them, so those are left alone.
+    const plain =
+      typeof property.type === "string" &&
+      property.type !== "null" &&
+      !composed &&
+      ["anyOf", "oneOf", "allOf", "enum", "const", "$ref", "nullable"].every((keyword) => !(keyword in property))
+    const placeholder = Predicate.isObject(current) && Object.keys(current).length === 0 && property.type !== "object"
+    if (declared && !required.includes(key) && plain && (current === null || placeholder)) {
+      const next = { ...result }
+      delete next[key]
+      return next
     }
 
     const repaired = repair(current, property, root, depth + 1)
