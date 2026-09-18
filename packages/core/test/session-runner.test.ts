@@ -2860,7 +2860,8 @@ describe("SessionRunnerLLM", () => {
 
   scenario("automatically persists native windows, retains earlier users, and waits for fresh usage", function* (s) {
     s.currentModel = LanguageModel.make({ id: "native", provider: "openai", route: OpenAIResponses.route })
-    s.compaction = { mode: "provider", threshold: 10_000 }
+    modelLimits.set("native", { context: 42_000, output: 32_000 })
+    s.compaction = "provider"
     const agents = yield* Agent.Service
     yield* agents.transform((editor) =>
       editor.update(Agent.defaultID, (agent) => {
@@ -2911,7 +2912,8 @@ describe("SessionRunnerLLM", () => {
 
   scenario("recovers an overflowing native window locally from original durable history", function* (s) {
     s.currentModel = LanguageModel.make({ id: "native", provider: "openai", route: OpenAIResponses.route })
-    s.compaction = { mode: "provider", threshold: 10_000 }
+    modelLimits.set("native", { context: 42_000, output: 32_000 })
+    s.compaction = "provider"
     yield* s.llm.push(TestLLM.textWithUsage("Earlier answer", "before-native", 10_000))
     yield* s.runPrompt("Original durable request")
     yield* s.llm.push(
