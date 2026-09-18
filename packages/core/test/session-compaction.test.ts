@@ -209,7 +209,7 @@ it.effect("auto compaction estimates current content against the buffered prompt
     expect(compaction.required(input(252_000, inputLimited))).toBe(true)
     const native = (tokens: number, limit: { context: number; input?: number; output: number } = inputLimited) => {
       const selected = input(tokens, limit)
-      return { ...selected, resolved: { ...selected.resolved, compaction: "provider" as const } }
+      return { ...selected, resolved: { ...selected.resolved, compaction: { type: "native" as const } } }
     }
     expect(compaction.required(native(251_999))).toBe(false)
     expect(compaction.required(native(252_000))).toBe(true)

@@ -178,7 +178,11 @@ export const fromCatalogModel = (
     Effect.flatMap((resolved) => validateProviderVariables(model, resolved)),
     Effect.flatMap((resolved) => {
       // Reject provider compaction policies up front so the misconfiguration surfaces before any step runs.
-      if (model.settings?.compaction !== "provider" || resolved.route.compact?.trigger || resolved.route.compact?.endpoint)
+      if (
+        model.settings?.compaction?.type !== "native" ||
+        resolved.route.compact?.trigger ||
+        resolved.route.compact?.endpoint
+      )
         return Effect.succeed(resolved)
       return Effect.fail(
         new UnsupportedCompactionError({ providerID: model.providerID, modelID: model.id, route: resolved.route.id }),

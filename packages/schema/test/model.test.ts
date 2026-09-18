@@ -59,11 +59,13 @@ describe("Model.Info", () => {
   test("provider compaction policy is a typed setting", () => {
     const model = Model.Info.default(Provider.ID.openai, Model.ID.make("gpt-5.4-mini"))
     expect(Schema.encodeSync(Model.Info)({ ...model, settings: { compaction: undefined } }).settings).toEqual({})
-    expect(Schema.decodeUnknownSync(Model.Info)({ ...model, settings: { compaction: "provider" } }).settings).toEqual({
-      compaction: "provider",
+    expect(
+      Schema.decodeUnknownSync(Model.Info)({ ...model, settings: { compaction: { type: "native" } } }).settings,
+    ).toEqual({
+      compaction: { type: "native" },
     })
-    expect(Schema.decodeUnknownSync(Provider.Compaction)("local")).toBe("local")
-    expect(() => Schema.decodeUnknownSync(Provider.Compaction)("automatic")).toThrow()
+    expect(Schema.decodeUnknownSync(Provider.Compaction)({ type: "summary" })).toEqual({ type: "summary" })
+    expect(() => Schema.decodeUnknownSync(Provider.Compaction)({ type: "automatic" })).toThrow()
   })
 
   test("uses practical token limits for unknown models", () => {

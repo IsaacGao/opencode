@@ -44,10 +44,10 @@ describe("ConfigProviderPlugin.Plugin", () => {
             providers: {
               custom: {
                 package: "@opencode/ai/providers/openai/responses",
-                settings: { compaction: "provider" },
+                settings: { compaction: { type: "native" } },
                 models: {
                   native: {},
-                  local: { settings: { compaction: "local" }, package: "@opencode/ai/providers/openai/chat" },
+                  local: { settings: { compaction: { type: "summary" } }, package: "@opencode/ai/providers/openai/chat" },
                   unsupported: { package: "@opencode/ai/providers/openai/chat" },
                 },
               },
@@ -60,8 +60,8 @@ describe("ConfigProviderPlugin.Plugin", () => {
       const local = required(yield* models.get(Provider.ID.make("custom"), Model.ID.make("local")))
       const unsupported = required(yield* models.get(Provider.ID.make("custom"), Model.ID.make("unsupported")))
       const defaultModel = required(yield* models.get(Provider.ID.make("default"), Model.ID.make("chat")))
-      expect(native.settings?.compaction).toBe("provider")
-      expect(local.settings?.compaction).toBe("local")
+      expect(native.settings?.compaction).toEqual({ type: "native" })
+      expect(local.settings?.compaction).toEqual({ type: "summary" })
       expect(defaultModel.settings?.compaction).toBeUndefined()
       yield* ModelResolver.fromCatalogModel(native)
       yield* ModelResolver.fromCatalogModel(local)

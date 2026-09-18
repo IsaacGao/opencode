@@ -165,7 +165,7 @@ it.effect("projects request settings, headers, and body overlays", () =>
     const input = model("@ai-sdk/google", {
       apiKey: "secret",
       thinkingConfig: { thinkingBudget: 1024 },
-      compaction: "provider",
+      compaction: { type: "native" },
       transport: "websocket",
     })
     const resolved = yield* aisdk.model({

@@ -34,7 +34,7 @@ describe("Provider", () => {
         apiKey: "secret",
         reasoningEffort: "high",
         chunkTimeout: 1000,
-        compaction: "provider",
+        compaction: { type: "native" },
         transport: "websocket",
       }),
     ).toEqual({

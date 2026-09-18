@@ -148,9 +148,9 @@ selected provider's native compaction for both automatic and manual requests:
   "$schema": "https://opencode.ai/config.json",
   "providers": {
     "openai": {
-      "settings": { "compaction": "provider" },
+      "settings": { "compaction": { "type": "native" } },
       "models": {
-        "gpt-4.1": { "settings": { "compaction": "local" } },
+        "gpt-4.1": { "settings": { "compaction": { "type": "summary" } } },
       },
     },
   },

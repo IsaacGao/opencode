@@ -8,7 +8,7 @@ export type LocationPublicRef = { directory: string }
 
 export type ModelRef = { id: string; providerID: string; variant?: string }
 
-export type ProviderCompaction = "local" | "provider"
+export type ProviderCompaction = { type: "summary" } | { type: "native" }
 
 export type ProviderTransport = "http" | "websocket"
 

@@ -32,7 +32,12 @@ export type Package = typeof Package.Type
 export const Activation = Schema.Literals(["auto", "enabled", "disabled"])
 export type Activation = typeof Activation.Type
 
-export const Compaction = Schema.Literals(["local", "provider"]).annotate({ identifier: "Provider.Compaction" })
+export const Compaction = Schema.Union([
+  Schema.Struct({ type: Schema.Literal("summary") }),
+  Schema.Struct({ type: Schema.Literal("native") }),
+])
+  .pipe(Schema.toTaggedUnion("type"))
+  .annotate({ identifier: "Provider.Compaction" })
 export type Compaction = typeof Compaction.Type
 
 /** "websocket" on a route without a WebSocket channel warns and falls back to HTTP. */
