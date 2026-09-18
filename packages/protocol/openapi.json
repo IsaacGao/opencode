@@ -13376,9 +13376,6 @@
       "Config.Provider.Settings": {
         "type": "object",
         "properties": {
-          "baseURL": {
-            "type": "string"
-          },
           "timeout": {
             "anyOf": [
               {
@@ -16500,9 +16497,6 @@
       "Provider.Settings": {
         "type": "object",
         "properties": {
-          "baseURL": {
-            "type": "string"
-          },
           "timeout": {
             "anyOf": [
               {

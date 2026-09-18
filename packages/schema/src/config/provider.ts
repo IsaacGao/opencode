@@ -8,7 +8,6 @@ import { optional } from "../schema.js"
 
 export const Settings = Schema.StructWithRest(
   Schema.Struct({
-    baseURL: Schema.String.pipe(optional),
     timeout: Schema.Union([Schema.Finite, Schema.Literal(false)]).pipe(optional),
     chunkTimeout: Schema.Finite.pipe(optional),
     compaction: Provider.Compaction.pipe(optional),

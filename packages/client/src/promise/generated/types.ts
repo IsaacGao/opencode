@@ -457,7 +457,6 @@ export type V2EventServerConnected = {
 }
 
 export type ProviderSettings = {
-  baseURL?: string
   timeout?: number | false
   chunkTimeout?: number
   compaction?: ProviderCompaction
@@ -465,7 +464,6 @@ export type ProviderSettings = {
 } & { [x: string]: any }
 
 export type ConfigProviderSettings = {
-  baseURL?: string
   timeout?: number | false
   chunkTimeout?: number
   compaction?: ProviderCompaction
