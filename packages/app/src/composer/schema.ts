@@ -64,8 +64,8 @@ const Image = Persistence.struct({
   blob: Schema.Struct({ id: Schema.NonEmptyString, url: Schema.String.check(Schema.isPattern(/^(blob:|data:)/)) }),
 })
 
-// Draft storage hydrates content-addressed blobs before this codec runs. Legacy
-// inline data remains usable, but unresolved references are not renderable.
+// Draft storage keeps content-addressed blobs in the store until an image is shown or sent; a
+// reference without a URL resolves through `resolveBlobUrl`. Legacy inline data remains usable.
 export const ImageAttachmentPart = Schema.Struct({
   ...ImageFields,
   blob: Persistence.optional(
