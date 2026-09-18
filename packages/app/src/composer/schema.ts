@@ -61,7 +61,8 @@ const ImageFields = {
 }
 const Image = Persistence.struct({
   ...ImageFields,
-  blob: Schema.Struct({ id: Schema.NonEmptyString, url: Schema.String.check(Schema.isPattern(/^(blob:|data:)/)) }),
+  // An empty URL is an image whose bytes are still in the draft store; see `resolveBlobUrl`.
+  blob: Schema.Struct({ id: Schema.NonEmptyString, url: Schema.String.check(Schema.isPattern(/^(blob:|data:|$)/)) }),
 })
 
 // Draft storage keeps content-addressed blobs in the store until an image is shown or sent; a
